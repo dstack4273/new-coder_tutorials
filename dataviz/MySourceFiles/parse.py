@@ -1,6 +1,7 @@
 import csv
+import os
 
-MY_FILE = "~/Projects/new-coder/dataviz/data/sample_sfpd_incident_all.csv"
+MY_FILE = os.path.expanduser("~/Projects/new-coder/dataviz/data/sample_sfpd_incident_all.csv")
 
 def parse(raw_file, delimiter):
     """Parses a raw CSV file into a JSON-like object."""
@@ -33,12 +34,11 @@ def main():
     new_data = parse(MY_FILE, ",")
 
     #print the data out to see how it looks
-    print new_data
+    #print new_data
 
+    #added to write the results of the parse function to a text file located in the project directory
+    with open(os.path.expanduser("~/Projects/new-coder/dataviz/ParseOutput/output.txt"), 'w') as p_data:
+        p_data.writelines(str(new_data))
 
 if __name__ == "__main__":
     main()
-
-
-#Revisit part 1 at some point to play with writing the output to a file or files
-#as suggested at the end of the page.
