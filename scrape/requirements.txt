@@ -1,3 +1,4 @@
 SQLAlchemy==0.9.8
 Scrapy==0.24.4
 psycopg2==2.5.4
+
