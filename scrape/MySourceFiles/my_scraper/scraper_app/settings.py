@@ -2,6 +2,8 @@ BOT_NAME = 'livingsocial'
 
 SPIDER_MODULES = ['sraper_app.spiders']
 
+ITEM_PIPELINES = ['scarper_app.pipelines.LivingSocialPipeline']
+
 DATABASE = {
     'drivername': 'postgres',
     'host': 'localahost',
