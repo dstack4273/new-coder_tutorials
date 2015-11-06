@@ -2,15 +2,28 @@ from sqlalchemy.orm import sessionmaker
 from models import Deals, db_connect, create_deals_table
 
 class LivingSocialPipeline(object):
-    """Stuff about things"""
+    """
+    LivingSocial pipeline that will take the scraped data and store it
+    in the database we built.
+
+    """
+
     def __init__(self):
-        """More stuff """
+        """
+        Initializes the database connection and sessionmaker and creates
+        the deals table
+
+        """
         engine = db_connect()
         create_deals_table(engine)
         self.Session = sessionmaker(bind=engine)
 
     def process_item(self, item, spider):
-        """and stuff"""
+        """
+        Save deals in the database -- this method will be called for every
+        item that is returned through out pipeline component. 
+
+        """
         session = self.Session()
         deal = Deals(**item)
 
@@ -24,4 +37,3 @@ class LivingSocialPipeline(object):
             session.close()
 
         return item
-        
