@@ -6,10 +6,10 @@ from scrapy.contrib.loader.processor import Join, MapCompose
 from scraper_app.items import LivingSocialDeal
 
 class LivingSocialSpider(BaseSpider):
-    """Spider for regularly updated livingsocial.com site, San Francisco Page"""
+    """Spider for regularly updated livingsocial.com site, Baltimore Page"""
     name = "livingsocial"
     allowed_domains = ["livingsocial.com"]
-    start_urls = ["http://www.livingsocial.com/cities/15-san-francisco"]
+    start_urls = ["http://www.livingsocial.com/cities/23-baltimore"]
 
     deal_list_xpath = '//li[@dealid]'
     item_fields = {
@@ -25,7 +25,7 @@ class LivingSocialSpider(BaseSpider):
         Default callback used by Scrapy to process download responses
 
         Testing contracts:
-        @url http://www.livingsocial.com/cities/15-san-francisco
+        @url http://www.livingsocial.com/cities/23-baltimore
         @returns items 1
         @scrapes title link
 
