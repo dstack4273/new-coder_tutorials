@@ -1,17 +1,20 @@
 from scrapy.spider import BaseSpider
-from scapy.selector import HtmlXPathSelector
+from scrapy.selector import HtmlXPathSelector
 from scrapy.contrib.loader import XPathItemLoader
 from scrapy.contrib.loader.processor import Join, MapCompose
 
 from scraper_app.items import LivingSocialDeal
 
+
 class LivingSocialSpider(BaseSpider):
-    """Spider for regularly updated livingsocial.com site, Baltimore Page"""
+    """
+    Spider for regularly updated livingsocial.com site, Baltimore Page
+    """
     name = "livingsocial"
     allowed_domains = ["livingsocial.com"]
     start_urls = ["http://www.livingsocial.com/cities/23-baltimore"]
 
-    deal_list_xpath = '//li[@dealid]'
+    deals_list_xpath = '//li[@dealid]'
     item_fields = {
         'title': './/span[@itemscope]/meta[@itemprop="name"]/@content',
         'link': './/a/@href',
@@ -34,7 +37,7 @@ class LivingSocialSpider(BaseSpider):
         selector = HtmlXPathSelector(response)
 
         #iterate over deals
-        for deal in selector.select(self.deals_list_xpath):
+        for deal in selector.xpath(self.deals_list_xpath):
             loader = XPathItemLoader(LivingSocialDeal(), selector=deal)
 
             #define processors
@@ -44,4 +47,4 @@ class LivingSocialSpider(BaseSpider):
             #iterate over fields and add xpaths to the loader
             for field, xpath in self.item_fields.iteritems():
                 loader.add_xpath(field, xpath)
-            yeild loader.load_item()
+            yield loader.load_item()
