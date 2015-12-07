@@ -2,11 +2,6 @@ from twisted.internet import protocol
 from twisted.python import log
 from twisted.words.protocols import irc
 
-class TalkBackBotFactort(protocol.ClientFactory):
-
-    def __init__(self, settings):
-        """ Initilzing the bot factory with our defined settings """
-
 class TalkBackBot(irc.IRCClient):
 
     def connectionMade(self):
@@ -25,3 +20,10 @@ class TalkBackBot(irc.IRCClient):
 
     def privmsg(self, user, channel, msg):
         """ Called when the bot recieves a message """
+
+
+class TalkBackBotFactory(protocol.ClientFactory):
+    protocol = TalkBackBot
+
+    def __init__(self, settings):
+        """ Initilzing the bot factory with our defined settings """
