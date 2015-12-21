@@ -50,6 +50,8 @@ class TalkBackBotService(Service):
 
     def stopService(self):
         """Disconnect."""
+        if self._bot and self._bot.transport.connected:
+            self._bot.transport.loseConnection()
 
 @implementer(IServiceMaker, IPlugin)
 class BotServiceMaker(object):
