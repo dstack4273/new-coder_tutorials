@@ -1,4 +1,5 @@
 import argparse
+
 from Tkinter import Tk, Canvas, Frame, Button, BOTH, TOP, BOTTOM
 
 BOARDS = ['debug', 'n00b', 'l33t', 'error'] #list of available sudoku boards
@@ -6,11 +7,13 @@ MARGIN = 20 # pixel padding around the boards
 SIDE = 50 # width of every board cell
 WIDTH = HEIGHT = MARGIN * 2 + SIDE * 9 # width and height of the entire board
 
+
 class SudokuError(Exception):
     """
     An application specific error.
     """
     pass
+
 
 def parse_arguments():
     """Parses arguments of the form:
@@ -25,7 +28,7 @@ def parse_arguments():
                             required=True)
 
     # creates a dictionary of keys = argument flag, and value = argument
-    args = arg_parser.parse_args()
+    args = vars(arg_parser.parse_args())
     return args['board']
 
 
@@ -35,10 +38,10 @@ class SudokuUI(Frame):
     """
     def __init__(self, parent, game):
         self.game = game
-        self.parent = parent
         Frame.__init__(self, parent)
+        self.parent = parent
 
-        self.row, self.col = 0, 0
+        self.row, self.col = -1, -1
 
         self.__initUI()
 
@@ -53,7 +56,7 @@ class SudokuUI(Frame):
         self.__draw_grid()
         self.__draw_puzzle()
 
-        self.canvas.bind("<Button1>", self.__cell_clicked)
+        self.canvas.bind("<Button-1>", self.__cell_clicked)
         self.canvas.bind("<Key>", self.__key_pressed)
 
     def __draw_grid(self):
@@ -72,7 +75,7 @@ class SudokuUI(Frame):
             x0 = MARGIN
             y0 = MARGIN + i * SIDE
             x1 = WIDTH - MARGIN
-            y1 = + i * SIDE
+            y1 = MARGIN + i * SIDE
             self.canvas.create_line(x0, y0, x1, y1, fill=color)
 
     def __draw_puzzle(self):
@@ -97,10 +100,9 @@ class SudokuUI(Frame):
     def __cell_clicked(self, event):
         if self.game.game_over:
             return
-
         x, y = event.x, event.y
         if (MARGIN < x < WIDTH - MARGIN and MARGIN < y < HEIGHT - MARGIN):
-            sel.canvas.focus_set()
+            self.canvas.focus_set()
 
             # get the row and col numbers from the x,y coordinates
             row, col = (y - MARGIN) / SIDE, (x - MARGIN) / SIDE
@@ -110,6 +112,8 @@ class SudokuUI(Frame):
                 self.row, self.col = -1, -1
             elif self.game.puzzle[row][col] == 0:
                 self.row, self.col = row, col
+        else:
+            self.row, self.col = -1, -1
 
         self.__draw_cursor()
 
@@ -154,7 +158,7 @@ class SudokuBoard(object):
     Sudoku board representation
     """
     def __init__(self, board_file):
-        self.board = board_file
+        self.board = self.__create_board(board_file)
 
     def __create_board(self, board_file):
         # create an initial matrix, or a list of a list
@@ -166,7 +170,6 @@ class SudokuBoard(object):
 
             # raise an error if line something other than 9 characters
             if len(line) != 9:
-                board = []
                 raise SudokuError("Each line in the sudoku puzzle must be 9 chars long.")
 
             # create a list for the line
@@ -238,7 +241,7 @@ class SudokuGame(object):
 
 
 if __name__ == '__main__':
-    board_name = parse_argments()
+    board_name = parse_arguments()
 
     with open('%s.sudoku' % board_name, 'r') as boards_file:
         game = SudokuGame(boards_file)
